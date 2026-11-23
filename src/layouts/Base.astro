@@ -1,0 +1,112 @@
+---
+import '@fontsource-variable/sora';
+import '@fontsource-variable/plus-jakarta-sans';
+import '../styles/global.css';
+import { SITE, CATEGORIES } from '../site.config.mjs';
+import { categoryUrl } from '../lib/utils';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  jsonLd?: object[];
+}
+const { title, description = SITE.description, image, type = 'website', jsonLd = [] } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} — ${SITE.tagline}`;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const ogImage = image ? new URL(image, SITE.url).href : undefined;
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {SITE.adsenseClient && (
+      <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITE.adsenseClient}`} crossorigin="anonymous"></script>
+    )}
+    {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+  </head>
+  <body>
+    <a class="sr" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>{SITE.name}</a>
+        <nav class="nav" aria-label="Main">
+          <a href={categoryUrl('Weekly Guide')} class="cta">This week</a>
+          <a href={categoryUrl('Festivals & Events')}>Festivals</a>
+          <a href={categoryUrl('Food & Markets')}>Food &amp; Markets</a>
+          <a href={categoryUrl('Indoor & Rainy Day')}>Rainy day</a>
+          <a href="/neighborhoods/">Neighborhoods</a>
+          <a href="/about/">About</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-grid">
+          <div>
+            <a class="logo" href="/"><span class="logo-mark" aria-hidden="true"></span>{SITE.name}</a>
+            <p>{SITE.description}</p>
+          </div>
+          <div>
+            <h4>Explore</h4>
+            <ul>{CATEGORIES.slice(0, 6).map((c) => <li><a href={categoryUrl(c)}>{c}</a></li>)}</ul>
+          </div>
+          <div>
+            <h4>Plan</h4>
+            <ul>
+              <li><a href={categoryUrl('Weekly Guide')}>This week in Seoul</a></li>
+              <li><a href={categoryUrl('Monthly Guide')}>This month in Seoul</a></li>
+              <li><a href={categoryUrl('Travel Tips')}>Travel tips</a></li>
+              <li><a href="/neighborhoods/">Neighborhoods</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>About</h4>
+            <ul>
+              <li><a href="/about/">About us</a></li>
+              <li><a href="/contact/">Contact</a></li>
+              <li><a href="/privacy/">Privacy policy</a></li>
+              <li><a href={SITE.koreanBlog}>Korean blog</a></li>
+              <li><a href="/rss.xml">RSS</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="route" aria-hidden="true"></div>
+        <p class="fine">© {year} {SITE.name}. Event details change — always check the official site before you go. Photos credited on each page.</p>
+      </div>
+    </footer>
+    <script is:inline>
+      {
+        // Refresh event badges with today's date (pages are static).
+        const now = new Date();
+        const label = { now: 'Happening now', soon: 'Opens ', ended: 'Event ended' };
+        for (const el of document.querySelectorAll('[data-start][data-end]')) {
+          const s = new Date(el.dataset.start), e = new Date(el.dataset.end);
+          e.setHours(23, 59, 59);
+          const st = now > e ? 'ended' : now < s ? 'soon' : 'now';
+          el.dataset.status = st;
+          const t = el.querySelector('.t');
+          if (t) t.textContent = st === 'soon' ? label.soon + s.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : label[st];
+          const banner = document.getElementById('ended-banner');
+          if (banner && st === 'ended') banner.hidden = false;
+        }
+      }
+    </script>
+  </body>
+</html>

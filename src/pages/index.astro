@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { SITE, AREAS } from '../site.config.mjs';
+import { getPosts, upcoming, postUrl, areaUrl, categoryUrl, fmtShort, stationHtml, LINE_COLORS } from '../lib/utils';
+
+const posts = await getPosts();
+const onNow = upcoming(posts, 45);
+const featured = posts.find((p) => p.data.event && onNow.includes(p)) ?? posts[0];
+const latest = posts.filter((p) => p.id !== featured?.id).slice(0, 6);
+const lineCycle = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const areaCounts = Object.fromEntries(AREAS.map((a) => [a, posts.filter((p) => p.data.area === a).length]));
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url, description: SITE.description }];
+---
+<Base jsonLd={jsonLd}>
+  <section class="hero-band">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Updated every morning in Seoul</p>
+        <h1>What's on in Seoul, <span class="nowrap">made easy.</span></h1>
+        <p class="sub">Festivals, markets, pop-ups and easy day plans — with the subway exit, the price and the little things locals forget to tell you.</p>
+        <div class="chips">
+          <a class="chip" href={categoryUrl('Weekly Guide')}><span class="dot" style="--c:#FFD54A"></span>This week</a>
+          <a class="chip" href={categoryUrl('Festivals & Events')}><span class="dot" style="--c:#996CAC"></span>Festivals</a>
+          <a class="chip" href={categoryUrl('Food & Markets')}><span class="dot" style="--c:#EF7C1C"></span>Food &amp; markets</a>
+          <a class="chip" href={categoryUrl('Indoor & Rainy Day')}><span class="dot" style="--c:#00A5DE"></span>Rainy day</a>
+        </div>
+      </div>
+      {featured && (
+        <a class="feature" href={postUrl(featured)}>
+          <img src={featured.data.hero.src} alt={featured.data.hero.alt} width="900" height="1100" fetchpriority="high" />
+          <div class="sign">
+            <div class="sign-top">
+              <StatusBadge event={featured.data.event} />
+              {featured.data.area && <span class="sign-area">{featured.data.area}</span>}
+            </div>
+            <strong>{featured.data.quickFacts?.name ?? featured.data.title}</strong>
+            {featured.data.quickFacts?.korean && <span class="sign-ko" lang="ko">{featured.data.quickFacts.korean}</span>}
+            {featured.data.quickFacts?.station && <span class="sign-st" set:html={stationHtml(featured.data.quickFacts.station)} />}
+          </div>
+        </a>
+      )}
+    </div>
+  </section>
+
+  {onNow.length > 0 && (
+    <section class="band">
+      <div class="wrap">
+        <div class="section-head">
+          <div><h2>Coming up on the line</h2><p class="muted">Events running now or opening in the next few weeks.</p></div>
+          <a href={categoryUrl('Festivals & Events')}>All events →</a>
+        </div>
+        <ol class="route-line">
+          {onNow.slice(0, 8).map((p, i) => (
+            <li style={`--c:${LINE_COLORS[lineCycle[i % lineCycle.length]]}`}>
+              <a href={postUrl(p)}>
+                <span class="stop" aria-hidden="true"></span>
+                <span class="when">{fmtShort(p.data.event!.start)} – {fmtShort(p.data.event!.end)}</span>
+                <span class="what">{p.data.quickFacts?.name ?? p.data.title}</span>
+                <StatusBadge event={p.data.event} />
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <section class="band soft">
+    <div class="wrap">
+      <div class="section-head"><h2>Latest guides</h2></div>
+      <div class="grid">{latest.map((p, i) => <PostCard post={p} eager={i < 3} />)}</div>
+      <AdSlot />
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap two">
+      <div>
+        <h2>Explore by neighborhood</h2>
+        <p class="muted">Seoul is a city of neighborhoods. Pick one and we'll show you what's worth the trip.</p>
+        <div class="chips">
+          {AREAS.map((a, i) => (
+            <a class="chip" href={areaUrl(a)}><span class="dot" style={`--c:${LINE_COLORS[lineCycle[i % 9]]}`}></span>{a}{areaCounts[a] > 0 && <span class="muted">{areaCounts[a]}</span>}</a>
+          ))}
+        </div>
+      </div>
+      <div class="basics">
+        <h2>Seoul basics we repeat in every guide</h2>
+        <ul>
+          <li><span class="line" style="--c:#0052A4">1</span><div><strong>Use Naver Map or KakaoMap.</strong> Google Maps can't do walking or transit directions in Korea.</div></li>
+          <li><span class="line" style="--c:#00A84D">2</span><div><strong>Tap a T-money card.</strong> One card covers subway, buses and many convenience stores.</div></li>
+          <li><span class="line" style="--c:#EF7C1C">3</span><div><strong>Carry a little cash.</strong> Cards work almost everywhere, but market stalls may prefer cash.</div></li>
+          <li><span class="line" style="--c:#996CAC">4</span><div><strong>Look for the exit number.</strong> Every guide tells you which subway exit to take.</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-band { background: var(--blue); color: #fff; padding-block: clamp(36px, 6vw, 72px); overflow: hidden; position: relative; }
+  .hero-band::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 8px; background: linear-gradient(90deg, #0052A4 0 14%, #00A84D 0 28%, #EF7C1C 0 42%, #00A5DE 0 56%, #996CAC 0 70%, #E6186C 0 84%, #FFD54A 0); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(28px, 5vw, 64px); align-items: center; }
+  .eyebrow { font-weight: 700; font-size: 15px; color: var(--sun); margin: 0 0 14px; }
+  .hero-copy h1 { font-size: clamp(38px, 6vw, 64px); line-height: 1.02; margin-bottom: 18px; }
+  .nowrap { white-space: nowrap; }
+  .sub { font-size: 19px; color: #dfe7ff; max-width: 34em; margin: 0 0 26px; }
+  .hero-copy .chip { background: rgb(255 255 255 / 14%); color: #fff; font-size: 15px; padding: 10px 16px; }
+  .hero-copy .chip:hover { background: #fff; color: var(--blue); border-color: #fff; }
+  .feature { position: relative; display: block; border-radius: 28px; overflow: hidden; aspect-ratio: 5 / 5.4; box-shadow: 0 24px 60px rgb(4 20 80 / 35%); color: var(--ink); text-decoration: none; }
+  .feature img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+  .feature:hover img { transform: scale(1.03); }
+  .sign { position: absolute; left: 16px; right: 16px; bottom: 16px; background: #fff; border-radius: 18px; padding: 16px 18px; display: grid; gap: 4px; box-shadow: var(--shadow); }
+  .sign-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .sign-area { font-size: 13px; font-weight: 700; color: var(--muted); }
+  .sign strong { font: 750 22px/1.15 var(--head); letter-spacing: -0.02em; }
+  .sign-ko { color: var(--muted); font-size: 15px; }
+  .sign-st { font-size: 14px; font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .feature img { transition: none; } }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .feature { aspect-ratio: 4 / 3.6; }
+  }
+
+  .route-line { list-style: none; margin: 0; padding: 0 0 8px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); overflow-x: auto; scroll-snap-type: x mandatory; position: relative; }
+  .route-line li { scroll-snap-align: start; position: relative; padding-top: 34px; }
+  .route-line li::before { content: ''; position: absolute; top: 12px; left: 0; right: 0; height: 8px; background: var(--c); }
+  .route-line li:first-child::before { left: 10px; border-radius: 4px 0 0 4px; }
+  .route-line li:last-child::before { right: 30%; border-radius: 0 4px 4px 0; }
+  .route-line a { display: grid; gap: 6px; padding-right: 20px; color: var(--ink); text-decoration: none; justify-items: start; }
+  .stop { position: absolute; top: 4px; left: 10px; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 5px solid var(--c); }
+  .when { font-size: 14px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+  .what { font: 700 18px/1.25 var(--head); letter-spacing: -0.01em; }
+  .route-line a:hover .what { color: var(--blue); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  .two .chip .muted { font-size: 12px; }
+  .basics { background: var(--soft); border-radius: 24px; padding: clamp(22px, 3vw, 36px); }
+  .basics ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+  .basics li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; font-size: 16px; }
+  .basics .line { width: 26px; height: 26px; font-size: 13px; margin: 2px 0 0; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+</style>

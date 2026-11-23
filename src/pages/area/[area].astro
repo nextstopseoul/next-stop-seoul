@@ -1,0 +1,16 @@
+---
+import ListPage from '../../components/ListPage.astro';
+import { AREAS } from '../../site.config.mjs';
+import { getPosts, slugify, type Post } from '../../lib/utils';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const areas = new Set<string>([...AREAS, ...posts.map((p) => p.data.area).filter(Boolean) as string[]]);
+  return [...areas].map((a) => ({
+    params: { area: slugify(a) },
+    props: { name: a, posts: posts.filter((p) => p.data.area === a) },
+  }));
+}
+const { name, posts } = Astro.props as { name: string; posts: Post[] };
+---
+<ListPage label="Neighborhood" title={`Things to do in ${name}`} intro={`Events, food and places worth the trip in ${name}, Seoul.`} posts={posts} />

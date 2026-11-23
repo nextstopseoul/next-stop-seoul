@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from './PostCard.astro';
+import AdSlot from './AdSlot.astro';
+import type { Post } from '../lib/utils';
+interface Props { title: string; intro: string; posts: Post[]; label: string }
+const { title, intro, posts, label } = Astro.props;
+---
+<Base title={title} description={intro}>
+  <section class="list-head">
+    <div class="wrap">
+      <p class="kicker">{label}</p>
+      <h1>{title}</h1>
+      <p class="intro">{intro}</p>
+    </div>
+  </section>
+  <section class="band">
+    <div class="wrap">
+      {posts.length > 0 ? (
+        <div class="grid">{posts.map((p, i) => <PostCard post={p} eager={i < 3} />)}</div>
+      ) : (
+        <div class="empty">
+          <p><strong>Nothing here yet.</strong> New guides go up every morning — check back soon.</p>
+          <a class="btn" href="/">See the latest guides</a>
+        </div>
+      )}
+      <AdSlot />
+    </div>
+  </section>
+</Base>
+<style>
+  .list-head { background: var(--soft); padding-block: clamp(36px, 5vw, 64px); border-bottom: 1px solid var(--line); }
+  .list-head h1 { margin-bottom: 10px; }
+  .intro { color: var(--muted); font-size: 18px; max-width: 60ch; margin: 0; }
+  .empty { padding: 40px; border: 2px dashed var(--line); border-radius: 20px; text-align: center; display: grid; gap: 12px; justify-items: center; }
+  .empty p { margin: 0; }
+</style>

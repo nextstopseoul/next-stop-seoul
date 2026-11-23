@@ -1,0 +1,14 @@
+---
+import TextPage from '../components/TextPage.astro';
+import { SITE } from '../site.config.mjs';
+---
+<TextPage title="About us" description={`About ${SITE.name}.`}>
+  <p>{SITE.name} is a small, independent guide to what's happening in Seoul, written for visitors and new arrivals who don't read Korean (yet).</p>
+  <p>We started as a Korean-language blog about Seoul's festivals, markets and weekend spots. Every guide here is rewritten for international travelers — not just translated — so you get the things Korean guides skip: which subway exit to take, whether your foreign card will work, how to book without a Korean phone number, and what's worth combining into one trip.</p>
+  <h2>How we check information</h2>
+  <p>Dates, hours and prices come from official sources such as organizers, the Seoul Metropolitan Government and VisitSeoul. When something isn't confirmed yet, we say so. Events change, so please check the official site before you go — and tell us if you spot something out of date.</p>
+  <h2>Photos</h2>
+  <p>We use openly licensed photos (mostly from Wikimedia Commons) and credit every photographer on the page. Some photos show past editions of an event; we label those.</p>
+  <h2>Read us in Korean</h2>
+  <p>Our Korean blog: <a href={SITE.koreanBlog}>{SITE.koreanBlog.replace('https://', '')}</a></p>
+</TextPage>

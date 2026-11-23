@@ -1,0 +1,9 @@
+---
+import TextPage from '../components/TextPage.astro';
+import { SITE } from '../site.config.mjs';
+---
+<TextPage title="Contact" description={`Get in touch with ${SITE.name}.`}>
+  <p>Spotted outdated info, have a question about visiting Seoul, or want to work together? Email us — we read everything.</p>
+  <p><a class="btn" href={`mailto:${SITE.contactEmail}`}>Email us</a></p>
+  <p class="muted">{SITE.contactEmail}</p>
+</TextPage>

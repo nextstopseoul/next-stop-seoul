@@ -1,0 +1,17 @@
+---
+import StatusBadge from './StatusBadge.astro';
+import { postUrl, fmtDate, type Post } from '../lib/utils';
+interface Props { post: Post; eager?: boolean }
+const { post, eager = false } = Astro.props;
+const d = post.data;
+---
+<a class="card" href={postUrl(post)}>
+  <div class="ph">
+    <img src={d.hero.src} alt={d.hero.alt} loading={eager ? 'eager' : 'lazy'} width="800" height="600" />
+    <StatusBadge event={d.event} />
+  </div>
+  <div class="meta"><span class="kicker">{d.category}</span>{d.area && <span>· {d.area}</span>}</div>
+  <h3>{d.title}</h3>
+  <p>{d.description}</p>
+  <div class="meta">{d.event ? `${d.quickFacts?.dates ?? ''}` : fmtDate(d.pubDate)}</div>
+</a>

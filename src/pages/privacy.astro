@@ -1,0 +1,20 @@
+---
+import TextPage from '../components/TextPage.astro';
+import { SITE } from '../site.config.mjs';
+const updated = 'November 2026';
+---
+<TextPage title="Privacy policy" description={`How ${SITE.name} handles your data.`}>
+  <p class="muted">Last updated: {updated}</p>
+  <p>{SITE.name} ("we") runs this website. This page explains what information is collected when you visit and how it is used.</p>
+  <h2>Information we collect</h2>
+  <p>We don't ask you to create an account and we don't collect personal information through forms. If you email us, we use your email only to reply.</p>
+  <h2>Cookies and advertising</h2>
+  <p>This site may show ads served by Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this and other websites. Google's use of advertising cookies enables it and its partners to serve ads based on your visits to this site and/or other sites on the Internet.</p>
+  <p>You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads">Google Ads Settings</a>, or learn more at <a href="https://policies.google.com/technologies/ads">How Google uses information from sites that use its services</a>. Visitors in the EEA, UK and Switzerland will be asked for consent before personalized ads are shown.</p>
+  <h2>Analytics</h2>
+  <p>We may use privacy-friendly analytics to understand which guides are useful. These tools collect aggregated, non-identifying data such as pages visited and approximate country.</p>
+  <h2>Affiliate links</h2>
+  <p>Some links may be affiliate links. If you book through them we may earn a small commission at no extra cost to you. We only link to things we'd recommend anyway.</p>
+  <h2>Contact</h2>
+  <p>Questions about this policy: {SITE.contactEmail}</p>
+</TextPage>

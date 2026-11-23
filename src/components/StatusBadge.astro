@@ -1,0 +1,12 @@
+---
+import { eventStatus, fmtShort } from '../lib/utils';
+interface Props { event?: { start: Date; end: Date } }
+const { event } = Astro.props;
+const st = eventStatus(event);
+const text = st === 'now' ? 'Happening now' : st === 'soon' ? `Opens ${fmtShort(event!.start)}` : 'Event ended';
+---
+{event && (
+  <span class="badge" data-status={st} data-start={event.start.toISOString()} data-end={event.end.toISOString()}>
+    <span class="t">{text}</span>
+  </span>
+)}

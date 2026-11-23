@@ -1,0 +1,24 @@
+---
+import ListPage from '../../components/ListPage.astro';
+import { CATEGORIES } from '../../site.config.mjs';
+import { getPosts, slugify, type Post } from '../../lib/utils';
+
+const INTROS: Record<string, string> = {
+  'Festivals & Events': 'Seasonal festivals, light shows and one-off events in Seoul — with dates, hours and how to get there.',
+  'Food & Markets': 'Traditional markets, food alleys and what to order when you get there.',
+  'Indoor & Rainy Day': 'Warm, dry and still fun: indoor ideas for cold or rainy days in Seoul.',
+  'Weekly Guide': 'Every Friday: the best things to do in Seoul in the week ahead.',
+  'Monthly Guide': "Planning ahead? Here's what's happening in Seoul next month.",
+};
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const cats = new Set<string>([...CATEGORIES, ...posts.map((p) => p.data.category)]);
+  return [...cats].map((c) => ({
+    params: { cat: slugify(c) },
+    props: { name: c, posts: posts.filter((p) => p.data.category === c) },
+  }));
+}
+const { name, posts } = Astro.props as { name: string; posts: Post[] };
+---
+<ListPage label="Category" title={name} intro={INTROS[name] ?? `Our ${name.toLowerCase()} guides for Seoul.`} posts={posts} />
