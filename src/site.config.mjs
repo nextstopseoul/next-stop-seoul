@@ -13,6 +13,8 @@ export const SITE = {
   contactEmail: 'hello@example.com', // ← replace
   // Google AdSense: put your publisher id (ca-pub-XXXX) here after approval. Empty = no ads rendered.
   adsenseClient: '',
+  // Google Search Console HTML-tag verification
+  googleVerification: '98fmcW9_IM55OGypmUHx0jItWRJtwVYOTp_eCdY3oAU',
 };
 
 // Neighborhoods and categories shown in navigation. Posts may use other values too.
