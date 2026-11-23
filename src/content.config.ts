@@ -19,7 +19,7 @@ const posts = defineCollection({
     category: z.string(),
     area: z.string().optional(),
     tags: z.array(z.string()).default([]),
-    hero: photo,
+    hero: photo.default({ src: '/images/default-hero.jpg', alt: 'Next Stop Seoul — what\'s on in Seoul' }),
     // Events: drives the "Happening now / Opens soon / Ended" badge.
     event: z
       .object({ start: z.coerce.date(), end: z.coerce.date() })

@@ -81,7 +81,7 @@ The route runs from **Cheonggye Plaza** to **Samilgyo Bridge**, roughly 1 km dow
 - **Join midway:** Jonggak Station (Line 1) or Euljiro 1-ga Station (Line 2) put you near the middle of the route.
 - **From Myeongdong:** it's about a 15-minute walk north, or one stop on Line 2 from Euljiro 1-ga.
 
-Search **청계광장** (Cheonggye Plaza) in Naver Map or KakaoMap. Google Maps won't give you walking or transit directions in Korea.
+Search **청계광장** (Cheonggye Plaza) in Naver Map or KakaoMap. Google Maps shows subway routes in Korea but can't guide you on foot.
 
 <figure>
   <img src="/images/posts/seoul-lantern-festival-2026/12.jpg" alt="The illuminated waterfall at Cheonggye Plaza glowing blue at night" loading="lazy" />
