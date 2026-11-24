@@ -1,8 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import { AREAS } from '../site.config.mjs';
-import { getPosts, areaUrl, LINE_COLORS } from '../lib/utils';
+import { getPosts, areaUrl, LINE_COLORS, allAreas } from '../lib/utils';
 const posts = await getPosts();
+const areas = allAreas(AREAS, posts);
 const lines = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 ---
 <Base title="Seoul neighborhoods" description="Find things to do in Seoul by neighborhood.">
@@ -11,7 +12,7 @@ const lines = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
       <h1>Seoul, neighborhood by neighborhood</h1>
       <p class="muted lead">Each stop on this line is a part of the city with its own personality.</p>
       <ol class="stops">
-        {AREAS.map((a, i) => {
+        {areas.map((a, i) => {
           const n = posts.filter((p) => p.data.area === a).length;
           return (
             <li style={`--c:${LINE_COLORS[lines[i % 9]]}`}>

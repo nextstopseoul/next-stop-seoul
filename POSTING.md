@@ -16,7 +16,7 @@ description: "One or two sentences, ~150 chars, for search results and cards."
 pubDate: 2026-11-24            # today, Asia/Seoul
 type: daily                    # daily | weekly | monthly | guide
 category: Festivals & Events   # Festivals & Events | Food & Markets | Indoor & Rainy Day | Exhibitions | Pop-ups | Parks & Walks | Travel Tips | Weekly Guide | Monthly Guide
-area: Jongno                   # Jongno | Myeongdong | Hongdae | Seongsu | Itaewon | Gangnam | Yeouido | Mapo | Gangseo | Jamsil | Near Seoul (or a new one)
+area: Jongno                   # Jongno | Myeongdong | Hongdae | Seongsu | Itaewon | Gangnam | Yeouido | Mapo | Gangseo | Jamsil | Yongsan | Near Seoul (a new one is added to the neighborhood lists automatically)
 tags: [keyword one, keyword two]
 hero:
   src: /images/posts/<slug>/03.jpg

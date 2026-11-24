@@ -19,7 +19,7 @@ export const SITE = {
 
 // Neighborhoods and categories shown in navigation. Posts may use other values too.
 export const AREAS = [
-  'Jongno', 'Myeongdong', 'Hongdae', 'Seongsu', 'Itaewon', 'Gangnam', 'Yeouido', 'Mapo', 'Gangseo', 'Jamsil', 'Near Seoul',
+  'Jongno', 'Myeongdong', 'Hongdae', 'Seongsu', 'Itaewon', 'Gangnam', 'Yeouido', 'Mapo', 'Gangseo', 'Jamsil', 'Yongsan', 'Near Seoul',
 ];
 export const CATEGORIES = [
   'Festivals & Events', 'Food & Markets', 'Indoor & Rainy Day', 'Exhibitions', 'Pop-ups', 'Parks & Walks', 'Weekly Guide', 'Monthly Guide', 'Travel Tips',

@@ -63,3 +63,10 @@ export function stationHtml(s: string): string {
     return `<span class="line" style="--c:${c}" title="Line ${l}">${label}</span><span class="sr">Line ${l}</span>`;
   });
 }
+
+/** Configured neighborhoods plus any area a post uses that isn't configured yet ("Near Seoul" stays last). */
+export function allAreas(configured: string[], posts: { data: { area?: string } }[]): string[] {
+  const extra = [...new Set(posts.map((p) => p.data.area).filter((a): a is string => !!a && !configured.includes(a)))].sort();
+  const last = configured.includes('Near Seoul') ? ['Near Seoul'] : [];
+  return [...configured.filter((a) => a !== 'Near Seoul'), ...extra, ...last];
+}

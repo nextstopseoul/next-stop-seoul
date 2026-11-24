@@ -4,14 +4,15 @@ import PostCard from '../components/PostCard.astro';
 import StatusBadge from '../components/StatusBadge.astro';
 import AdSlot from '../components/AdSlot.astro';
 import { SITE, AREAS } from '../site.config.mjs';
-import { getPosts, upcoming, postUrl, areaUrl, categoryUrl, fmtShort, stationHtml, LINE_COLORS } from '../lib/utils';
+import { getPosts, upcoming, postUrl, areaUrl, categoryUrl, fmtShort, stationHtml, LINE_COLORS, allAreas } from '../lib/utils';
 
 const posts = await getPosts();
 const onNow = upcoming(posts, 45);
 const featured = posts.find((p) => p.data.event && onNow.includes(p)) ?? posts[0];
 const latest = posts.filter((p) => p.id !== featured?.id).slice(0, 6);
 const lineCycle = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-const areaCounts = Object.fromEntries(AREAS.map((a) => [a, posts.filter((p) => p.data.area === a).length]));
+const areas = allAreas(AREAS, posts);
+const areaCounts = Object.fromEntries(areas.map((a) => [a, posts.filter((p) => p.data.area === a).length]));
 const jsonLd = [{ '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: SITE.url, description: SITE.description }];
 ---
 <Base jsonLd={jsonLd}>
@@ -82,7 +83,7 @@ const jsonLd = [{ '@context': 'https://schema.org', '@type': 'WebSite', name: SI
         <h2>Explore by neighborhood</h2>
         <p class="muted">Seoul is a city of neighborhoods. Pick one and we'll show you what's worth the trip.</p>
         <div class="chips">
-          {AREAS.map((a, i) => (
+          {areas.map((a, i) => (
             <a class="chip" href={areaUrl(a)}><span class="dot" style={`--c:${LINE_COLORS[lineCycle[i % 9]]}`}></span>{a}{areaCounts[a] > 0 && <span class="muted">{areaCounts[a]}</span>}</a>
           ))}
         </div>
