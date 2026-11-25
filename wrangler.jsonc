@@ -1,9 +1,14 @@
 {
-  // Cloudflare Workers static-assets config: serves the Astro build output in ./dist
+  // Cloudflare Workers config: serves the Astro build output in ./dist,
+  // and runs worker/index.js for /api/* (Gemini "Ask about Seoul" endpoint).
+  // Secret: `npx wrangler secret put GEMINI_API_KEY` (local dev: put it in .dev.vars, which is git-ignored).
   "name": "next-stop-seoul",
   "compatibility_date": "2026-11-01",
+  "main": "worker/index.js",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
   }
 }
