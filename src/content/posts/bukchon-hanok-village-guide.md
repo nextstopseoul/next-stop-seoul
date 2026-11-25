@@ -46,7 +46,7 @@ Tiled roofs stepping down a hillside, wooden gates, stone walls — and, on a cl
 
 But Bukchon is not a theme park. It's a lived-in neighborhood squeezed between two royal palaces, **Gyeongbokgung** to the west and **Changdeokgung** to the east, and thousands of people still call it home. After years of complaints about noise and crowds, Seoul introduced tourist visiting hours here — and since **March 2025** they come with real fines. If you only read one section of this guide, make it the one about the rules.
 
-> **Heads up:** The photos in this guide show Bukchon in different seasons and years, not this week. Some evening shots were taken before the current 5pm curfew, which now applies to the main alley.
+> **Heads up:** The photos in this guide show Bukchon in different seasons and years, not this week. The evening shots show the alleys at times that are now outside tourist visiting hours in the red zone.
 
 ## What Bukchon actually is
 
